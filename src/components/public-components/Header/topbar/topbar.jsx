@@ -1,5 +1,6 @@
 import DropDown from '@/components/ui/dropdown';
 import React from 'react';
+import CountryDropdown from './country-dropdown';
 
 const Topbar = () => {
     return (
@@ -11,7 +12,7 @@ const Topbar = () => {
             <div className='flex justify-center items-center gap-3'>
                 <p>Sell on Swoo</p>
                 <p>Order Tracki</p>
-                <DropDown />
+                <CountryDropdown />
             </div>
         </nav>
     );
