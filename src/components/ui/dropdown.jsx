@@ -30,8 +30,6 @@ const DropDown = ({ children, currentValue }) => {
           setOpen(false);
       }
     };
-
-  
     document.addEventListener("mousedown", handleClickOutside);
     
     return () => {
@@ -41,7 +39,7 @@ const DropDown = ({ children, currentValue }) => {
   },[])
   
   return (
-    <section id="dropdown" className="relative" ref={dropdownRef}>
+    <section id="dropdown" className="relative z-50" ref={dropdownRef}>
       <button
         onClick={dropdownHandleToggle}
         type="button"
@@ -51,7 +49,7 @@ const DropDown = ({ children, currentValue }) => {
         <IoMdArrowDropdown />
       </button>
       {isOpen && (
-        <div onClick={()=> setOpen(false)} className="dropdown_options absolute py-2 px-2 border border-gray-300 shadow-lg w-max rounded-xl right-0 min-w-37.5">
+        <div onClick={()=> setOpen(false)} className="dropdown_options z-40 absolute py-2 px-2 border bg-white border-gray-300 shadow-lg w-max rounded-xl right-0 min-w-37.5">
           {children}
         </div>
       )}
