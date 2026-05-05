@@ -1,4 +1,3 @@
-import MainLogo from "@/components/ui/MainLogo";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -10,7 +9,7 @@ import { IoIosArrowDown } from "react-icons/io";
 const menuList = [
   { name: "Home", link: "/" },
   { name: "Products", link: "/products" },
-  { name: "pages", link: "/pages" },
+  { name: "cart", link: "/cart" },
   { name: "contact", link: "/contact" },
 ];
 
