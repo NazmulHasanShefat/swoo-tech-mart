@@ -19,7 +19,7 @@ const CenterNav = () => {
     <nav className="px-5 py-3 flex justify-between items-center pb-5 w-full max-w-325 mx-auto">
       <div className="left flex items-center gap-10">
         <Image src={"/logo.png"} width={130} height={50} alt="logo" />
-        <ul className="menusList flex items-center gap-3">
+        <ul className="menusList hidden lg:flex items-center gap-3">
           {menuList.map((menu, index) => {
             return (
               <Link
@@ -35,14 +35,14 @@ const CenterNav = () => {
         </ul>
       </div>
       <div className="nav_right flex items-center gap-3">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 ">
           <div className="w-7.5 h-7.5 flex justify-center items-center bg-gray-200/50 cursor-pointer rounded-full">
             <CiHeart />
           </div>
           <div className="w-7.5  h-7.5 flex justify-center items-center bg-gray-200/50 cursor-pointer rounded-full">
             <FaUserCircle />
           </div>
-          <div className="">
+          <div className="hidden sm:block">
             <h2 className="text-gray-400">Welcome</h2>
             <div className="flex text-gray-900 font-bold">
               <Link href={"/login"} className="hover:text-green-500">

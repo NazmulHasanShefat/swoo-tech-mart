@@ -21,7 +21,7 @@ const HeroSection = () => {
   return (
     <section className="px-5 w-full max-w-325 mx-auto h-max gap-3 lg:grid grid-cols-12 mt-6">
       <div className="categorys_section col-span-2">
-        <h1 className="text-2xl px-2"> SALE 40% OFF</h1>
+        <h1 className="text-2xl px-2 font-bold"> SALE 40% OFF</h1>
         {CategoryLinks.map((category, index) => (
           <li className="block list-none" key={index}>
             <Link
