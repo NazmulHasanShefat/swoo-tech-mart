@@ -16,9 +16,11 @@ const menuList = [
 
 const CenterNav = () => {
   return (
-    <nav className="px-5 py-3 flex justify-between items-center pb-5 w-full max-w-325 mx-auto">
+    <nav className="px-5 py-2 flex justify-between items-center pb-5 w-full max-w-325 mx-auto">
       <div className="left flex items-center gap-10">
+        <Link href={"/"}>
         <Image src={"/logo.png"} width={130} height={50} alt="logo" />
+        </Link>
         <ul className="menusList hidden lg:flex items-center gap-3">
           {menuList.map((menu, index) => {
             return (
@@ -45,11 +47,11 @@ const CenterNav = () => {
           <div className="hidden sm:block">
             <h2 className="text-gray-400">Welcome</h2>
             <div className="flex text-gray-900 font-bold">
-              <Link href={"/login"} className="hover:text-green-500">
+              <Link href={"/auth/login"} className="hover:text-green-500">
                 Log in{" "}
               </Link>
               <span className="inline-block px-1">/</span>
-              <Link href={"/login"} className="hover:text-green-500">
+              <Link href={"/auth/register"} className="hover:text-green-500">
                 Register{" "}
               </Link>
             </div>
