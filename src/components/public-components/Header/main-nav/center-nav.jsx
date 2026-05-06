@@ -10,7 +10,7 @@ const menuList = [
   { name: "Home", link: "/" },
   { name: "Products", link: "/products" },
   { name: "cart", link: "/cart" },
-  { name: "contact", link: "/contact" },
+  { name: "checkout", link: "/checkout" },
 ];
 
 const CenterNav = () => {
