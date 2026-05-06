@@ -41,7 +41,9 @@ const CenterNav = () => {
             <CiHeart />
           </div>
           <div className="w-7.5  h-7.5 flex justify-center items-center bg-gray-200/50 cursor-pointer rounded-full">
+            <Link href={"/profile"}>
             <FaUserCircle />
+            </Link>
           </div>
           <div className="hidden sm:block">
             <h2 className="text-gray-400">Welcome</h2>

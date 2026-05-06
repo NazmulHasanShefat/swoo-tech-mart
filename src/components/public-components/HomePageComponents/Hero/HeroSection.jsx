@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -36,7 +35,7 @@ const HeroSection = () => {
       </div>
       <div className="Banners_section col-span-10 grid lg:grid-cols-3 gap-3">
         <div
-          className={`lg:col-span-2 bg-no-repeat lg:row-span-5 p-7 bg-[url('/headphone.png')] bg-size-[100%]  hover:bg-size-[120%] rounded-lg bg-center transition-all duration-200 ease-in-out`}
+          className={`lg:col-span-2 bg-no-repeat lg:row-span-5 bg-[url('/headphone.png')] bg-size-[150%] p-7  hover:bg-size-[170%] rounded-lg bg-center transition-all duration-200 ease-in-out`}
         >
           <div className="w-full">
             <h1 className="text-white font-bold text-2xl lg:text-5xl">
