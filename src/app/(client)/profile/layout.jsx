@@ -8,7 +8,7 @@ const ProfileLayout = ({children}) => {
         <div className="md:col-span-2">
           <ProfileMenus />
         </div>
-        <div className="md:col-span-10 border rounded-lg">
+        <div className="md:col-span-10 shadow-md border-2 border-gray-50 rounded-lg">
          {children}
         </div>
       </div>

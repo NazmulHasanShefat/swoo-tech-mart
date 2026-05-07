@@ -6,8 +6,8 @@ import React from "react";
 const menuItems = [
   { label: "Profile", href: "/profile" },
   { label: "My Orders", href: "/profile/myorders" },
-  { label: "Update Profile", href: "/profile/update-profile" },
-  { label: "Change Password", href: "/profile/change-password" },
+  { label: "Update Profile", href: "/profile/profile-update" },
+  { label: "Change Password", href: "/profile/profile-update/change-password" },
   { label: "WishList", href: "/profile/wishlist" },
   { label: "Cart", href: "/profile/cart" },
   { label: "Logout", href: "/profile/logout" },

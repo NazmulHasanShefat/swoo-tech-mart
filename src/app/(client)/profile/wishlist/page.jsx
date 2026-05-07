@@ -1,13 +1,12 @@
-import ButtonPrimary from '@/components/ui/ButtonPrimary';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
-const MyOrderPage = () => {
+const WishListPage = () => {
     return (
-        <section className='p-5'>
-            <h1 className='text-2xl md:text-4xl font-bold'>My Orders</h1>
-            <div className='orderItems'>
+        <section>
+            <h1>Wish List</h1>
+             <div className='orderItems'>
                 <div className='grid grid-cols-12 order_item bg-gray-100/50 border-2 border-gray-200 rounded-lg p-5 mt-5'>
                   <div className='col-span-3 lg:col-span-1'>
                     <Image src={"/tablet.png"} width={50} height={50} alt="product image" />
@@ -33,4 +32,4 @@ const MyOrderPage = () => {
     );
 };
 
-export default MyOrderPage;
+export default WishListPage;
