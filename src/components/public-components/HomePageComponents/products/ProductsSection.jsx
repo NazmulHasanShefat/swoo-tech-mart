@@ -51,7 +51,16 @@ const ProductsSection = () => {
             Add to cart
           </ButtonPrimary>
         </div>
+   
+
+
+
+
+
       </div>
+
+
+
     </section>
   );
 };
