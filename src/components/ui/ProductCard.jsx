@@ -3,7 +3,7 @@ import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 
 export default function ProductCard({ children, className }) {
   return (
-    <div className="product_card border rounded-lg border-gray-200 hover:border-green-500 transition-all duration-200 flex flex-col p-5 relative">
+    <div className="product_card border rounded-lg border-gray-200 hover:border-green-500 transition-all duration-200 flex flex-col p-5 relative w-full">
       {children}
     </div>
   );
@@ -26,7 +26,7 @@ export function ProductCardImage({ src, alt, className }) {
       alt={alt}
       width={200}
       height={200}
-      className={`mx-auto mt-5 object-cover w-[100px] cursor-pointer ${className}`}
+      className={`mx-auto mt-5 object-cover w-max cursor-pointer ${className}`}
     />
   );
 }

@@ -1,5 +1,7 @@
+import RadioBox from "@/components/ui/RadioBox";
 import RangeAtoBSlider from "@/components/ui/RangeAtoBSlider";
 import SelectBasic, { OptionBasic } from "@/components/ui/SelectBasic";
+import StockRadio from "./StockRadio";
 
 const FiltersOptions = ({min, max}) => {
   return (
@@ -15,10 +17,12 @@ const FiltersOptions = ({min, max}) => {
         <h1 className="font-semibold">Filter by Price</h1>
         <div className="mt-5">
         <RangeAtoBSlider />
-        <div className="flex items-center mt-3 justify-between">
-          <p className="border border-gray-300 px-2 rounded-lg"> {min} </p>
-          <p className="border border-gray-300 px-2 rounded-lg"> {max} </p>
         </div>
+      </div>
+      <div className="filter_by_category mt-5">
+        <h1 className="font-semibold">Filter by Stock</h1>
+        <div className="mt-5">
+          <StockRadio />
         </div>
       </div>
     </section>
