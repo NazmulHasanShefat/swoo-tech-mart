@@ -56,6 +56,7 @@ const RegisterForm = () => {
             {" "}
             {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
           </div>
+            <button type="button" className="py-2 px-4 rounded-2xl bg-green-600 text-white w-max text-sm mt-3 hover:opacity-80 cursor-pointer">Generate password</button>
         </div>
 
         <ButtonPrimary type="submit" color={`green`} className="w-max cursor-pointer mt-5">

@@ -1,4 +1,3 @@
-import RadioBox from "@/components/ui/RadioBox";
 import RangeAtoBSlider from "@/components/ui/RangeAtoBSlider";
 import SelectBasic, { OptionBasic } from "@/components/ui/SelectBasic";
 import StockRadio from "./StockRadio";

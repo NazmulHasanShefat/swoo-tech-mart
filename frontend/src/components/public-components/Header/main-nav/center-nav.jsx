@@ -15,7 +15,7 @@ const menuList = [
 
 const CenterNav = () => {
   return (
-    <nav className="px-5 py-2 flex justify-between items-center pb-5 w-full max-w-325 mx-auto">
+    <nav className="px-5 py-5 sm:py-2 flex justify-between items-center pb-5 w-full max-w-325 mx-auto">
       <div className="left flex items-center gap-10">
         <Link href={"/"}>
         <Image src={"/logo.png"} width={130} height={50} alt="logo" />
@@ -29,7 +29,7 @@ const CenterNav = () => {
                 className="font-bold flex items-center"
               >
                 {menu.name}
-                <IoIosArrowDown />
+                {/* <IoIosArrowDown /> */}
               </Link>
             );
           })}
@@ -37,10 +37,10 @@ const CenterNav = () => {
       </div>
       <div className="nav_right flex items-center gap-3">
         <div className="flex items-center gap-3 ">
-          <div className="w-7.5 h-7.5 flex justify-center items-center bg-gray-200/50 cursor-pointer rounded-full">
-            <CiHeart />
-          </div>
-          <div className="w-7.5  h-7.5 flex justify-center items-center bg-gray-200/50 cursor-pointer rounded-full">
+          <Link href={"/wishlist"} className="w-7.5 h-7.5 hover:text-white hover:bg-green-600 flex justify-center items-center bg-gray-200/50 cursor-pointer rounded-full">
+            <CiHeart stroke="20"/>
+          </Link>
+          <div className="w-7.5 hover:text-white hover:bg-green-500 h-7.5 flex justify-center items-center bg-gray-200/50 cursor-pointer rounded-full">
             <Link href={"/profile"}>
             <FaUserCircle />
             </Link>
@@ -61,7 +61,7 @@ const CenterNav = () => {
             <FaCartShopping size={20}/>
             <div className="px-2 py-1 bg-green-500 text-white rounded-full text-xs absolute -bottom-2 -right-2">$</div>
           </div>
-          <div className="">
+          <div className="hidden sm:block">
             <h2 className="text-gray-400">Cart</h2>
             <div className="flex text-gray-900 font-bold">
              $4543

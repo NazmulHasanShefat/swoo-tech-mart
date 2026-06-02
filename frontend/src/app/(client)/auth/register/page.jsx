@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import React from 'react';
 import RegisterForm from './RegisterForm';
+import Link from 'next/link';
 export const metadata = {
   title: "Swoo Tech Mart - Register",
   description: "Online store for all your tech needs",
@@ -16,6 +17,7 @@ const Register = () => {
                 <h2 className='text-3xl font-bold mb-5'>Create an account</h2>
                 <div className='auth_form'>
                     <RegisterForm />
+                    <Link href={"/pwgen"}>password genarator</Link>
                 </div>
             </div>
             </div>

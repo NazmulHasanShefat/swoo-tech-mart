@@ -1,10 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import ItemQuantity from "./ItemQuantity";
+
 import Image from "next/image";
 import { RiDeleteBin5Fill } from "react-icons/ri";
+import ItemQuantity from "../cart/ItemQuantity";
 
-const CartItem = () => {
+const WishItem = () => {
   const [quantity, setQuantity] = useState(1);
   return (
     <div className="flex md:flex-row flex-col items-center">
@@ -34,4 +35,4 @@ const CartItem = () => {
   );
 };
 
-export default CartItem;
+export default WishItem;

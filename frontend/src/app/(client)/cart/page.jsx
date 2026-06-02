@@ -20,27 +20,31 @@ const CartPage = () => {
                 <p className="text-lg font-bold">$200</p>
             </div>
             <div className="flex justify-between items-center mb-3">
-                <div className="grid grid-cols-6 gap-2 items-center">
+                <div className="grid grid-cols-10 gap-2 items-center">
                     <input
                         type="text"
                         placeholder="Enter coupon code"
-                        className="ring-2 ring-gray-200 col-span-4 rounded-l-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="ring-2 ring-gray-200 col-span-6 rounded-l-lg py-1.5 px-4 focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
-                    <button className="bg-green-500 cursor-pointer col-span-2 text-white py-3 px-5 rounded-r-lg hover:bg-green-600 transition duration-300">
+                    <button className="bg-green-500 cursor-pointer col-span-4 text-white py-1.5 px-5 rounded-r-lg hover:bg-green-600 transition duration-300">
                         Apply
                     </button>
                 </div>
             </div>
-            <div className="flex justify-between items-center mb-3">
-                <h3 className="text-lg font-semibold">Shipping fee</h3>
-                <p className="text-lg font-bold">- $23</p>
+            <div className="flex justify-between items-center mb-1 mt-5">
+                <h3 className="text-base">Shipping fee</h3>
+                <p className="text-base">- $23</p>
             </div>
-            <div className="flex justify-between items-center mb-3">
-                <h3 className="text-lg font-semibold">Total discount</h3>
-                <p className="text-lg font-bold">- $323</p>
+            <div className="flex text-green-700 justify-between items-center mb-1">
+                <h3 className="text-base">Total discount</h3>
+                <p className="text-base">- $323</p>
             </div>
-            <div className="flex justify-between items-center mb-3">
-                <ButtonPrimary color={`green`} className="w-full cursor-pointer mt-5">
+            <div className="flex justify-between items-center mb-1">
+                <h3 className="text-base font-bold">Total</h3>
+                <p className="text-base font-bold">- $323</p>
+            </div>
+            <div className="flex justify-between items-center mb-1">
+                <ButtonPrimary color={`green`} className="w-full cursor-pointer mt-1">
                     Proceed to Checkout
                 </ButtonPrimary>
             </div>

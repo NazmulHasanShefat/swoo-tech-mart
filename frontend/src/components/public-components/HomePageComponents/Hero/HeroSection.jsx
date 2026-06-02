@@ -19,7 +19,7 @@ const CategoryLinks = [
 const HeroSection = () => {
   return (
     <section className="px-5 w-full max-w-325 mx-auto h-max gap-3 lg:grid grid-cols-12 mt-6">
-      <div className="categorys_section col-span-2">
+      <div className="categorys_section col-span-2 hidden md:block">
         <h1 className="text-2xl px-2 font-bold"> SALE 40% OFF</h1>
         {CategoryLinks.map((category, index) => (
           <li className="block list-none" key={index}>
@@ -35,9 +35,9 @@ const HeroSection = () => {
       </div>
       <div className="Banners_section col-span-10 grid lg:grid-cols-3 gap-3">
         <div
-          className={`lg:col-span-2 bg-no-repeat lg:row-span-5 bg-[url('/headphone.png')] bg-size-[150%] p-7  hover:bg-size-[170%] rounded-lg bg-center transition-all duration-200 ease-in-out`}
+          className={`lg:col-span-2 bg-no-repeat lg:row-span-5 bg-[url('/headphone.png')] bg-size-[200%] md:bg-size-[150%]  hover:bg-size-[170%] rounded-lg bg-center transition-all duration-200 ease-in-out`}
         >
-          <div className="w-full">
+          <div className="w-full h-full p-7 bg-black/23">
             <h1 className="text-white font-bold text-2xl lg:text-5xl">
               Noise Cancelling Headphone
             </h1>
@@ -53,9 +53,9 @@ const HeroSection = () => {
         </div>
 
         <div className="p-5 rounded-lg lg:row-span-3 bg-[url('/watch.png')] bg-size-[100%]  hover:bg-size-[120%]  bg-center transition-all duration-200 ease-in-out bg-no-repeat">
-          <div className="lg:pl-37">
+          <div className="lg:pl-37 text-right">
           <p>xomia</p>
-          <h2 className="font-bold text-xl">Sport Water <br /> Resistance Watch</h2>
+          <h2 className="font-bold text-xl">Sport Water <br /> <span className="text-green-500"> Resistance Watch </span> </h2>
           <button className="py-1 px-2 rounded-md bg-black text-white font-semibold">
             Shop Now
           </button>
