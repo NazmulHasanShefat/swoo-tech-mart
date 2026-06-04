@@ -137,6 +137,7 @@ const RegisterForm = () => {
           </button>
 
           <div className="flex items-center gap-2 mt-[12px]">
+            <span>Length:</span>
           <input type="range" defaultValue={8} onChange={handleRange} min={8} max={50} className=" h-5 bg-green-600 rounded-lg appearance-none cursor-pointer accent-white hover:accent-green-200"/>
           <span> {rangeVal} </span>
           </div>

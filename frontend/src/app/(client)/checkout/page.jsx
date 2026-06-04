@@ -49,7 +49,7 @@ const page = () => {
             <div className="flex items-center justify-between">
                 <h2 className="text-gray-400">Cupon code</h2>
                 <p className="font-bold flex items-center">
-                    <input type="text" name="cupon_code" id="cuponCode" className="ring-2 ring-gray-200 outline-0 focus:ring-2 focus:ring-green-200 px-3 py-1 rounded-md"/>
+                    <input type="text" name="cupon_code" id="cuponCode" className="ring-2 w-full ring-gray-200 outline-0 focus:ring-2 focus:ring-green-200 px-3 py-1 rounded-md"/>
                     <button className="px-3 py-1.5 bg-green-500 text-white rounded-md ml-2 cursor-pointer hover:bg-green-400">Apply</button>
                 </p>
             </div>

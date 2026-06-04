@@ -17,7 +17,7 @@ const Register = () => {
                 <h2 className='text-3xl font-bold mb-5'>Create an account</h2>
                 <div className='auth_form'>
                     <RegisterForm />
-                    <Link href={"/pwgen"}>password genarator</Link>
+                    {/* <Link href={"/pwgen"} >password genarator</Link> */}
                 </div>
             </div>
             </div>
