@@ -57,7 +57,7 @@ const AdminNav = () => {
 
     return (
         <header
-            className={`fixed w-full border-b shadow-sm transition-colors duration-300 ${
+            className={`fixed w-full  transition-colors duration-300 ${
                 isDark
                     ? 'border-[#1e3d34] bg-[#0f261d] text-white'
                     : 'border-[#fbfdfc] bg-[#fbfcfb] text-[#fafafa]'
