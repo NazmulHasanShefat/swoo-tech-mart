@@ -80,7 +80,7 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="sticky top-0 h-screen w-[260px] border-r border-slate-200 bg-white text-slate-800 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+    <aside className="sticky top-0 h-screen max-w-[260px] border-r border-slate-200 bg-white text-slate-800 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
       <div className="flex items-center justify-between border-b border-slate-200 px-4 py-4 dark:border-slate-700">
         <div className="flex items-center gap-2 text-[19px] font-bold tracking-tight text-slate-800 dark:text-slate-100">
           <span>Deal</span>
