@@ -7,7 +7,7 @@ const AdminLayout = ({ children }) => {
     <div className="min-h-screen bg-gray-100">
       <div className="flex justify-between">
         <Sidebar />
-        <div className="relative flex-1">
+        <div className="relative flex-1 min-w-0">
           <AdminNav />
           {children}
         </div>

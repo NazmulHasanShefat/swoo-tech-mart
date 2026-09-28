@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 
@@ -35,17 +35,19 @@ const PlusIcon = () => (
   </svg>
 );
 
-const PhonePreview = ({ previewUrl }) => (
-  <div className="relative flex h-44 w-32 items-center justify-center overflow-hidden rounded-[30px] border border-slate-200 bg-gradient-to-b from-white via-slate-100 to-slate-200 shadow-[0_10px_25px_rgba(15,23,42,0.12)]">
-    <div className="absolute left-1/2 top-2 h-1.5 w-20 -translate-x-1/2 rounded-full bg-slate-300" />
-    <div className="absolute bottom-2 left-1/2 h-1.5 w-12 -translate-x-1/2 rounded-full bg-slate-300" />
+const PlaceholderImage = ({ previewUrl }) => (
+  <div className="relative flex h-44 w-full items-center justify-center overflow-hidden rounded-2xl border border-dashed border-slate-300 bg-gradient-to-br from-slate-100 via-white to-slate-100 shadow-inner">
     {previewUrl ? (
       <img src={previewUrl} alt="Product preview" className="h-full w-full object-cover" />
     ) : (
-      <div className="relative h-28 w-20 overflow-hidden rounded-[20px] border border-slate-200 bg-[radial-gradient(circle_at_30%_25%,rgba(255,255,255,0.95),rgba(255,255,255,0.55)_15%,rgba(121,125,129,0.28)_30%,rgba(33,38,46,0.75)_100%)]">
-        <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/20 to-transparent" />
-        <div className="absolute inset-0 bg-[linear-gradient(135deg,#ebedf2_0%,#c9ced2_20%,#949ca4_30%,#ffffff_50%,#949ca4_70%,#e9ecf1_100%)] opacity-90" />
-        <div className="absolute inset-x-0 bottom-4 h-8 bg-slate-700/15 blur-md" />
+      <div className="flex flex-col items-center justify-center gap-3 text-slate-400">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <UploadIcon />
+        </div>
+        <div className="text-center">
+          <p className="text-sm font-medium text-slate-500">Upload Product Image</p>
+          <p className="text-xs text-slate-400">PNG, JPG, WEBP</p>
+        </div>
       </div>
     )}
   </div>
@@ -53,7 +55,6 @@ const PhonePreview = ({ previewUrl }) => (
 
 const applyEditorAction = (command, value = null, updateHtml) => {
   const editor = document.getElementById("product-description-editor");
-
   if (!editor) return;
 
   editor.focus();
@@ -66,54 +67,55 @@ const applyEditorAction = (command, value = null, updateHtml) => {
 
 const applyHeading = (level, updateHtml) => {
   const editor = document.getElementById("product-description-editor");
-
   if (!editor) return;
 
   editor.focus();
 
-  if (document.getSelection && document.getSelection().toString().trim()) {
-    document.execCommand("formatBlock", false, `h${level}`);
-  } else {
-    const selection = window.getSelection();
-    const range = document.createRange();
+  const tag = `H${level}`;
+  const selection = window.getSelection();
 
-    if (!editor.firstChild) {
-      editor.innerHTML = `<h${level}>Type your heading</h${level}>`;
-      updateHtml?.(editor.innerHTML || "");
-      return;
+  if (selection && selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0);
+    let parentTag = range.commonAncestorContainer.parentNode;
+    if (parentTag.nodeType === Node.TEXT_NODE) {
+      parentTag = parentTag.parentNode;
     }
 
-    range.selectNodeContents(editor);
-    selection.removeAllRanges();
-    selection.addRange(range);
-    document.execCommand("formatBlock", false, `h${level}`);
+    // Toggle back to paragraph if the heading is already applied
+    if (parentTag.tagName === tag) {
+      document.execCommand("formatBlock", false, "<P>");
+    } else {
+      document.execCommand("formatBlock", false, `<${tag}>`);
+    }
+  } else {
+    document.execCommand("formatBlock", false, `<${tag}>`);
   }
 
-  updateHtml?.(editor.innerHTML || "");
+  if (typeof updateHtml === "function") {
+    updateHtml(editor.innerHTML || "");
+  }
 };
 
 const addLinkToEditor = (updateHtml) => {
   const url = window.prompt("Enter a link URL", "https://");
-
   if (!url) return;
-
   applyEditorAction("createLink", url, updateHtml);
 };
 
 const AddProductForm = () => {
   const fileInputRef = useRef(null);
   const [selectedImages, setSelectedImages] = useState([]);
-  const [selectedColor, setSelectedColor] = useState("");
   const [expirationEnabled, setExpirationEnabled] = useState(true);
-  const [descriptionHtml, setDescriptionHtml] = useState("<p>Write your full product description here...</p>");
+  const [unlimitedStock, setUnlimitedStock] = useState(true);
+  const [descriptionHtml, setDescriptionHtml] = useState("");
+  const [variants, setVariants] = useState([]);
 
   useEffect(() => {
     const editor = document.getElementById("product-description-editor");
-
     if (editor && !editor.innerHTML.trim()) {
       editor.innerHTML = descriptionHtml;
     }
-  }, [descriptionHtml]);
+  }, []);
 
   const triggerUpload = () => {
     fileInputRef.current?.click();
@@ -121,7 +123,6 @@ const AddProductForm = () => {
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files || []);
-
     if (!files.length) return;
 
     const imageUrls = files
@@ -131,11 +132,7 @@ const AddProductForm = () => {
         url: URL.createObjectURL(file),
       }));
 
-    setSelectedImages((prev) => {
-      const combined = [...prev, ...imageUrls].slice(0, 3);
-      return combined;
-    });
-
+    setSelectedImages((prev) => [...prev, ...imageUrls].slice(0, 3));
     event.target.value = "";
   };
 
@@ -150,15 +147,45 @@ const AddProductForm = () => {
     const formValues = Object.fromEntries(formData.entries());
 
     formValues.images = selectedImages.map((image) => image.url);
-    formValues.selectedColor = selectedColor;
     formValues.expirationEnabled = expirationEnabled;
     formValues.longDescription = descriptionHtml;
+    formValues.variants = variants.filter((variant) => variant.name || variant.value);
 
     console.log("Product form data:", formValues);
   };
 
   const previewUrl = selectedImages[0]?.url || "";
   const galleryImages = selectedImages.slice(0, 3);
+
+  const addVariantRow = () => {
+    setVariants((prev) => [...prev, { name: "", value: "" }]);
+  };
+
+  const updateVariant = (index, field, value) => {
+    setVariants((prev) =>
+      prev.map((variant, variantIndex) =>
+        variantIndex === index ? { ...variant, [field]: value } : variant,
+      ),
+    );
+  };
+
+  const removeVariant = (index) => {
+    setVariants((prev) => prev.filter((_, variantIndex) => variantIndex !== index));
+  };
+
+  const toolbarButtons = [
+    { label: "H1", action: () => applyHeading(1, setDescriptionHtml), className: "font-bold" },
+    { label: "H2", action: () => applyHeading(2, setDescriptionHtml), className: "font-semibold" },
+    { label: "H3", action: () => applyHeading(3, setDescriptionHtml), className: "font-medium" },
+    { label: "H4", action: () => applyHeading(4, setDescriptionHtml), className: "font-medium" },
+    { label: "B", action: () => applyEditorAction("bold", null, setDescriptionHtml), className: "font-bold" },
+    { label: "U", action: () => applyEditorAction("underline", null, setDescriptionHtml), className: "underline" },
+    { label: "Link", action: () => addLinkToEditor(setDescriptionHtml), className: "" },
+    { label: "L", action: () => applyEditorAction("justifyLeft", null, setDescriptionHtml), className: "text-left" },
+    { label: "C", action: () => applyEditorAction("justifyCenter", null, setDescriptionHtml), className: "text-center" },
+    { label: "R", action: () => applyEditorAction("justifyRight", null, setDescriptionHtml), className: "text-right" },
+    { label: "• List", action: () => applyEditorAction("insertUnorderedList", null, setDescriptionHtml), className: "" },
+  ];
 
   return (
     <form onSubmit={handleSubmit} className="w-full bg-[#f5f5f5] px-3 py-3 sm:px-5 lg:px-7">
@@ -176,12 +203,12 @@ const AddProductForm = () => {
               />
             </label>
 
-            <button className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50">
+            <button type="button" className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50">
               <SaveIcon />
               Save to draft
             </button>
 
-            <button className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50">
+            <button type="button" className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50">
               <PlusIcon />
             </button>
           </div>
@@ -198,8 +225,8 @@ const AddProductForm = () => {
                   <input
                     type="text"
                     name="productName"
-                    defaultValue="iPhone 15"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-base text-slate-700 outline-none transition focus:border-[#1d9d57] focus:bg-white"
+                    placeholder="Enter product name"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-base text-slate-700 outline-none transition focus:border-[#1d9d57] focus:bg-white placeholder:text-slate-400"
                   />
                 </div>
 
@@ -208,8 +235,8 @@ const AddProductForm = () => {
                   <textarea
                     rows={4}
                     name="shortDescription"
-                    defaultValue="The iPhone 15 delivers cutting-edge performance with the A16 Bionic chip, an immersive Super Retina XDR display, advanced dual-camera system, and exceptional battery life."
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-base text-slate-700 outline-none transition focus:border-[#1d9d57] focus:bg-white"
+                    placeholder="Write a short product description"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-base text-slate-700 outline-none transition focus:border-[#1d9d57] focus:bg-white placeholder:text-slate-400"
                   />
                 </div>
 
@@ -218,23 +245,14 @@ const AddProductForm = () => {
 
                   <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
                     <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 bg-white px-3 py-2">
-                      {[
-                        { label: 'H1', action: () => applyHeading(1, setDescriptionHtml), className: 'font-bold' },
-                        { label: 'H2', action: () => applyHeading(2, setDescriptionHtml), className: 'font-semibold' },
-                        { label: 'H3', action: () => applyHeading(3, setDescriptionHtml), className: 'font-medium' },
-                        { label: 'H4', action: () => applyHeading(4, setDescriptionHtml), className: 'font-medium' },
-                        { label: 'B', action: () => applyEditorAction('bold', null, setDescriptionHtml), className: 'font-bold' },
-                        { label: 'U', action: () => applyEditorAction('underline', null, setDescriptionHtml), className: 'underline' },
-                        { label: 'Link', action: () => addLinkToEditor(setDescriptionHtml), className: '' },
-                        { label: 'L', action: () => applyEditorAction('justifyLeft', null, setDescriptionHtml), className: 'text-left' },
-                        { label: 'C', action: () => applyEditorAction('justifyCenter', null, setDescriptionHtml), className: 'text-center' },
-                        { label: 'R', action: () => applyEditorAction('justifyRight', null, setDescriptionHtml), className: 'text-right' },
-                        { label: '• List', action: () => applyEditorAction('insertUnorderedList', null, setDescriptionHtml), className: '' },
-                      ].map((tool) => (
+                      {toolbarButtons.map((tool) => (
                         <button
                           key={tool.label}
                           type="button"
-                          onClick={tool.action}
+                          onMouseDown={(e) => {
+                            e.preventDefault(); // Prevents focus loss from contenteditable
+                            tool.action();
+                          }}
                           className={`inline-flex h-8 min-w-8 items-center justify-center rounded-md border border-slate-200 px-2 text-xs font-medium text-slate-700 transition hover:bg-slate-100 ${tool.className}`}
                         >
                           {tool.label}
@@ -246,8 +264,9 @@ const AddProductForm = () => {
                       id="product-description-editor"
                       contentEditable
                       suppressContentEditableWarning
+                      data-placeholder="Write your full product description here..."
                       onInput={(event) => setDescriptionHtml(event.currentTarget.innerHTML)}
-                      className="min-h-[180px] w-full px-3 py-3 text-base leading-7 text-slate-700 outline-none"
+                      className="min-h-[180px] w-full px-3 py-3 text-base leading-7 text-slate-700 outline-none placeholder:text-slate-400 [&_h1]:text-2xl [&_h1]:font-bold [&_h2]:text-xl [&_h2]:font-semibold [&_h3]:text-lg [&_h3]:font-medium [&_h4]:text-base [&_h4]:font-medium [&_ul]:list-disc [&_ul]:pl-5 empty:before:content-[attr(data-placeholder)] empty:before:text-slate-400 empty:before:pointer-events-none"
                     />
                     <input type="hidden" name="longDescription" value={descriptionHtml} />
                   </div>
@@ -264,8 +283,8 @@ const AddProductForm = () => {
                   <input
                     type="text"
                     name="productPrice"
-                    defaultValue="$999.99"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-base text-slate-700 outline-none transition focus:border-[#1d9d57] focus:bg-white"
+                    placeholder="Enter product price"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-base text-slate-700 outline-none transition focus:border-[#1d9d57] focus:bg-white placeholder:text-slate-400"
                   />
                 </div>
 
@@ -276,8 +295,8 @@ const AddProductForm = () => {
                     <input
                       type="text"
                       name="discountPrice"
-                      defaultValue="$99"
-                      className="w-full bg-transparent text-base text-slate-700 outline-none"
+                      placeholder="0.00"
+                      className="w-full bg-transparent text-base text-slate-700 outline-none placeholder:text-slate-400"
                     />
                   </div>
                 </div>
@@ -329,7 +348,7 @@ const AddProductForm = () => {
                   <label className="block">
                     <span className="mb-2 block text-sm font-medium text-slate-700">Start</span>
                     <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
-                      <input type="date" name="startDate" defaultValue="" className="w-full bg-transparent text-slate-700 outline-none placeholder:text-slate-400" />
+                      <input type="date" name="startDate" defaultValue="" className="w-full bg-transparent text-slate-700 outline-none placeholder:text-slate-400" onClick={(e) => e.currentTarget.showPicker?.()} />
                       <CalendarIcon />
                     </div>
                   </label>
@@ -337,7 +356,7 @@ const AddProductForm = () => {
                   <label className="block">
                     <span className="mb-2 block text-sm font-medium text-slate-700">End</span>
                     <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
-                      <input type="date" name="endDate" defaultValue="" className="w-full bg-transparent text-slate-700 outline-none placeholder:text-slate-400" />
+                      <input type="date" name="endDate" defaultValue="" className="w-full bg-transparent text-slate-700 outline-none placeholder:text-slate-400" onClick={(e) => e.currentTarget.showPicker?.()} />
                       <CalendarIcon />
                     </div>
                   </label>
@@ -356,16 +375,18 @@ const AddProductForm = () => {
                 <div>
                   <label className="mb-2 block text-sm font-medium text-slate-700">Stock Quantity</label>
                   <input
-                    type="text"
+                    type={unlimitedStock ? "text" : "number"}
                     name="stockQuantity"
-                    defaultValue="Unlimited"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-base text-slate-700 outline-none transition focus:border-[#1d9d57] focus:bg-white"
+                    placeholder={unlimitedStock ? "Unlimited" : "Enter stock quantity"}
+                    disabled={unlimitedStock}
+                    className={`w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-base text-slate-700 outline-none transition focus:border-[#1d9d57] focus:bg-white placeholder:text-slate-400 ${unlimitedStock ? "cursor-not-allowed opacity-70" : ""}`}
                   />
                 </div>
 
                 <div>
                   <label className="mb-2 block text-sm font-medium text-slate-700">Stock Status</label>
-                  <select name="stockStatus" defaultValue="In Stock" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-base text-slate-700 outline-none transition focus:border-[#1d9d57] focus:bg-white">
+                  <select name="stockStatus" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-base text-slate-700 outline-none transition focus:border-[#1d9d57] focus:bg-white">
+                    <option value="">Select stock status</option>
                     <option>In Stock</option>
                     <option>Out of Stock</option>
                     <option>Low Stock</option>
@@ -375,7 +396,13 @@ const AddProductForm = () => {
 
               <div className="mt-5 flex items-center gap-2">
                 <label className="relative inline-flex cursor-pointer items-center">
-                  <input type="checkbox" name="isUnlimited" defaultChecked className="peer sr-only" />
+                  <input
+                    type="checkbox"
+                    name="isUnlimited"
+                    checked={unlimitedStock}
+                    onChange={() => setUnlimitedStock((prev) => !prev)}
+                    className="peer sr-only"
+                  />
                   <span className="h-6 w-11 rounded-full bg-[#b5d8b8] transition peer-checked:bg-[#1d9d57]" />
                   <span className="absolute left-1 top-1 h-4 w-4 rounded-full bg-white shadow transition peer-checked:translate-x-5" />
                 </label>
@@ -395,8 +422,8 @@ const AddProductForm = () => {
 
               <div className="mb-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
                 <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white p-5">
-                  <button type="button" onClick={triggerUpload} className="mb-3 flex h-44 items-center justify-center rounded-xl bg-slate-50">
-                    <PhonePreview previewUrl={previewUrl} />
+                  <button type="button" onClick={triggerUpload} className="mb-3 flex w-full items-center justify-center rounded-xl bg-slate-50 p-2">
+                    <PlaceholderImage previewUrl={previewUrl} />
                   </button>
 
                   <div className="mt-2 flex w-full items-center justify-between gap-3">
@@ -457,7 +484,7 @@ const AddProductForm = () => {
                 <div>
                   <label className="mb-2 block text-sm font-medium text-slate-700">Product Categories</label>
                   <select name="productCategory" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-base text-slate-700 outline-none transition focus:border-[#1d9d57] focus:bg-white">
-                    <option value="">Select your product</option>
+                    <option value="">Select product category</option>
                     <option>Smartphones</option>
                     <option>Accessories</option>
                     <option>Audio</option>
@@ -467,7 +494,7 @@ const AddProductForm = () => {
                 <div>
                   <label className="mb-2 block text-sm font-medium text-slate-700">Product Tag</label>
                   <select name="productTag" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-base text-slate-700 outline-none transition focus:border-[#1d9d57] focus:bg-white">
-                    <option value="">Select your product</option>
+                    <option value="">Select product tag</option>
                     <option>Popular</option>
                     <option>New Arrival</option>
                     <option>Featured</option>
@@ -475,21 +502,43 @@ const AddProductForm = () => {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">Select your color</label>
-                  <div className="flex flex-wrap gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
-                    {colorOptions.map((color, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        value={color}
-                        aria-label={`Select color ${index + 1}`}
-                        onClick={() => setSelectedColor(color)}
-                        className={`h-9 w-9 rounded-full border-2 transition ${selectedColor === color ? "border-slate-700" : "border-transparent hover:border-slate-300"}`}
-                        style={{ backgroundColor: color }}
-                      />
+                  <div className="mb-2 flex items-center justify-between">
+                    <label className="block text-sm font-medium text-slate-700">Variants</label>
+                    <button
+                      type="button"
+                      onClick={addVariantRow}
+                      className="inline-flex items-center justify-center rounded-lg bg-[#1d9d57] px-3 py-1.5 text-xs font-medium text-white transition hover:bg-[#168a4d]"
+                    >
+                      + Add
+                    </button>
+                  </div>
+
+                  <div className="space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+                    {variants.map((variant, index) => (
+                      <div key={index} className="grid gap-3 md:grid-cols-[1fr_1fr_auto]">
+                        <input
+                          type="text"
+                          value={variant.name}
+                          onChange={(event) => updateVariant(index, "name", event.target.value)}
+                          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-[#1d9d57]"
+                        />
+                        <input
+                          type="text"
+                          value={variant.value}
+                          onChange={(event) => updateVariant(index, "value", event.target.value)}
+                          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-[#1d9d57]"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeVariant(index)}
+                          className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-red-200 bg-red-50 text-lg font-bold text-red-500 transition hover:bg-red-100"
+                          aria-label="Remove variant"
+                        >
+                          ×
+                        </button>
+                      </div>
                     ))}
                   </div>
-                  <input type="hidden" name="selectedColor" value={selectedColor} />
                 </div>
               </div>
             </section>
