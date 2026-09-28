@@ -57,13 +57,13 @@ const AdminNav = () => {
 
     return (
         <header
-            className={`fixed w-full  transition-colors duration-300 ${
+            className={`sticky w-full top-0 left-0 transition-colors duration-300 ${
                 isDark
                     ? 'border-[#1e3d34] bg-[#0f261d] text-white'
                     : 'border-[#fbfdfc] bg-[#fbfcfb] text-[#fafafa]'
             }`}
         >
-            <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+            <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
                 <div className="flex items-center gap-3">
                     <div className="flex h-8 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[#9ae7b5] to-[#2a9d78] text-lg font-extrabold text-[#0c2d22] shadow-md">
                         ST

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const colorOptions = ["#d9e8d7", "#f4dfe4", "#e7d7c8", "#d9d9d9", "#b2d4d9", "#c7d4a5"];
 
@@ -51,11 +51,69 @@ const PhonePreview = ({ previewUrl }) => (
   </div>
 );
 
+const applyEditorAction = (command, value = null, updateHtml) => {
+  const editor = document.getElementById("product-description-editor");
+
+  if (!editor) return;
+
+  editor.focus();
+  document.execCommand(command, false, value);
+
+  if (typeof updateHtml === "function") {
+    updateHtml(editor.innerHTML || "");
+  }
+};
+
+const applyHeading = (level, updateHtml) => {
+  const editor = document.getElementById("product-description-editor");
+
+  if (!editor) return;
+
+  editor.focus();
+
+  if (document.getSelection && document.getSelection().toString().trim()) {
+    document.execCommand("formatBlock", false, `h${level}`);
+  } else {
+    const selection = window.getSelection();
+    const range = document.createRange();
+
+    if (!editor.firstChild) {
+      editor.innerHTML = `<h${level}>Type your heading</h${level}>`;
+      updateHtml?.(editor.innerHTML || "");
+      return;
+    }
+
+    range.selectNodeContents(editor);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    document.execCommand("formatBlock", false, `h${level}`);
+  }
+
+  updateHtml?.(editor.innerHTML || "");
+};
+
+const addLinkToEditor = (updateHtml) => {
+  const url = window.prompt("Enter a link URL", "https://");
+
+  if (!url) return;
+
+  applyEditorAction("createLink", url, updateHtml);
+};
+
 const AddProductForm = () => {
   const fileInputRef = useRef(null);
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedColor, setSelectedColor] = useState("");
   const [expirationEnabled, setExpirationEnabled] = useState(true);
+  const [descriptionHtml, setDescriptionHtml] = useState("<p>Write your full product description here...</p>");
+
+  useEffect(() => {
+    const editor = document.getElementById("product-description-editor");
+
+    if (editor && !editor.innerHTML.trim()) {
+      editor.innerHTML = descriptionHtml;
+    }
+  }, [descriptionHtml]);
 
   const triggerUpload = () => {
     fileInputRef.current?.click();
@@ -94,6 +152,7 @@ const AddProductForm = () => {
     formValues.images = selectedImages.map((image) => image.url);
     formValues.selectedColor = selectedColor;
     formValues.expirationEnabled = expirationEnabled;
+    formValues.longDescription = descriptionHtml;
 
     console.log("Product form data:", formValues);
   };
@@ -145,13 +204,53 @@ const AddProductForm = () => {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">Product Description</label>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">Short Description</label>
                   <textarea
-                    rows={5}
-                    name="productDescription"
-                    defaultValue="The iPhone 15 delivers cutting-edge performance with the A16 Bionic chip, an immersive Super Retina XDR display, advanced dual-camera system, and exceptional battery life. All encased in stunning sapphire-grace glass."
+                    rows={4}
+                    name="shortDescription"
+                    defaultValue="The iPhone 15 delivers cutting-edge performance with the A16 Bionic chip, an immersive Super Retina XDR display, advanced dual-camera system, and exceptional battery life."
                     className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-base text-slate-700 outline-none transition focus:border-[#1d9d57] focus:bg-white"
                   />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">Description</label>
+
+                  <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+                    <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 bg-white px-3 py-2">
+                      {[
+                        { label: 'H1', action: () => applyHeading(1, setDescriptionHtml), className: 'font-bold' },
+                        { label: 'H2', action: () => applyHeading(2, setDescriptionHtml), className: 'font-semibold' },
+                        { label: 'H3', action: () => applyHeading(3, setDescriptionHtml), className: 'font-medium' },
+                        { label: 'H4', action: () => applyHeading(4, setDescriptionHtml), className: 'font-medium' },
+                        { label: 'B', action: () => applyEditorAction('bold', null, setDescriptionHtml), className: 'font-bold' },
+                        { label: 'U', action: () => applyEditorAction('underline', null, setDescriptionHtml), className: 'underline' },
+                        { label: 'Link', action: () => addLinkToEditor(setDescriptionHtml), className: '' },
+                        { label: 'L', action: () => applyEditorAction('justifyLeft', null, setDescriptionHtml), className: 'text-left' },
+                        { label: 'C', action: () => applyEditorAction('justifyCenter', null, setDescriptionHtml), className: 'text-center' },
+                        { label: 'R', action: () => applyEditorAction('justifyRight', null, setDescriptionHtml), className: 'text-right' },
+                        { label: '• List', action: () => applyEditorAction('insertUnorderedList', null, setDescriptionHtml), className: '' },
+                      ].map((tool) => (
+                        <button
+                          key={tool.label}
+                          type="button"
+                          onClick={tool.action}
+                          className={`inline-flex h-8 min-w-8 items-center justify-center rounded-md border border-slate-200 px-2 text-xs font-medium text-slate-700 transition hover:bg-slate-100 ${tool.className}`}
+                        >
+                          {tool.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    <div
+                      id="product-description-editor"
+                      contentEditable
+                      suppressContentEditableWarning
+                      onInput={(event) => setDescriptionHtml(event.currentTarget.innerHTML)}
+                      className="min-h-[180px] w-full px-3 py-3 text-base leading-7 text-slate-700 outline-none"
+                    />
+                    <input type="hidden" name="longDescription" value={descriptionHtml} />
+                  </div>
                 </div>
               </div>
             </section>
